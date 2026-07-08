@@ -1,12 +1,19 @@
 import { createBrowserRouter } from "react-router";
-import RootLayout from "../layouts/RootLayout.jsx"
+import ErrorPage from "../pages/errorPage/ErrorPage.jsx";
+import RootLayout from "../layouts/RootLayout.jsx";
 import HomePage from "../pages/Index.jsx";
-import TambahData from "../pages/Tambah.jsx";
+import FormData from "../pages/FormData.jsx";
+import Lazy from "../components/ErrorHandling/Lazy.jsx";
 
 const router  = createBrowserRouter([
     {
+        path    : "*",
+        element : < ErrorPage />
+    },
+    {
         path    : "/",
         element : < RootLayout />,
+        hydrateFallbackElement    : < Lazy/>,
        children: [
         {
             index : true,
@@ -14,7 +21,11 @@ const router  = createBrowserRouter([
         },
         {
             path    : "/tambah",
-            element : < TambahData/>
+            element : < FormData/>
+        },
+        {
+            path : "/edit/:id",
+            element : < FormData/>
         }
        ]
     }

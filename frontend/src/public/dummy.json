@@ -1,19 +1,35 @@
 {
-    "data" : [
-        {
-            "id" : 1,
-            "nama" : "jaka",
-            "email" : "jaka@gmail.com"
-        },
-        {
-            "id" : 2,
-            "nama" : "joko",
-            "email" : "joko@gmail.com"
-        },
-        {
-            "id" : 3,
-            "nama" : "juki",
-            "email" : "juki@gmail.com"
-        }
-    ]
+  "users": [
+    {
+      "id": "1",
+      "nama": "jaka",
+      "email": "jaka@gmail.com"
+    },
+    {
+      "id": "2",
+      "nama": "joko",
+      "email": "joko@gmail.com"
+    },
+    {
+      "nama": "fuji",
+      "email": "a",
+      "id": "qw5F5Ryj_sU"
+    },
+    {
+      "nama": "fuji",
+      "email": "adzikirsaputro06@gmail.com",
+      "id": "AYZvJ3iihU4"
+    },
+    {
+      "nama": "s",
+      "email": "adzikirsaputro06@gmail.com",
+      "id": "I9GbWuo-KFA"
+    },
+    {
+      "nama": "james",
+      "email": "james@mail.com",
+      "id": "Jp2cI5t9LU8"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
