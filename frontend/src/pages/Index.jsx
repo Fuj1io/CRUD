@@ -21,6 +21,7 @@ function HomePage() {
         loadData();
   }, [users]);
 
+
   return (
     <div className="container">
       <div className="d-flex mt-4 my-4 justify-content-between">
@@ -43,7 +44,7 @@ function HomePage() {
                 <td>{user.nama}</td>
                 <td>{user.email}</td>
                 <td className='d-flex gap-2'>
-                  <Link to="/edit" className='btn btn-primary'>Edit</Link>
+                  <Link to={`/edit/${user.id}`} className='btn btn-primary'>Edit</Link>
                   <button href="/delete" className='btn btn-danger'>Hapus</button>
                 </td>
               </tr>
