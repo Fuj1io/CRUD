@@ -6,18 +6,9 @@
       "email": "jaka@gmail.com"
     },
     {
-      "id": "2",
-      "nama": "joko",
-      "email": "joko@gmail.com"
-    },
-    {
-      "nama": "fuji",
-      "email": "adzikirsaputro06@gmail.com",
-      "id": "qw5F5Ryj_sU"
-    },
-    {
-      "$schema": "./node_modules/json-server/schema.json",
-      "id": "5NPNyw-m1yc"
+      "nama": "jokowi",
+      "email": "jokouwii@gmail.com",
+      "id": "2"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

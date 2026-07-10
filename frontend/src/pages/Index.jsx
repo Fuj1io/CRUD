@@ -7,7 +7,20 @@ function HomePage() {
   const [users, setUsers]  = useState([]);
   const [error, setError]  = useState(null);
 
-  useEffect(() => {
+ 
+  const deleteData = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/users/${id}`, {
+        method: "DELETE",
+      });
+      // Optimistically update UI
+      setUsers(prev => prev.filter(user => user.id !== id));
+    } catch (error) {
+      console.error("Gagal Hapus Data !");
+    }
+  }
+
+   useEffect(() => {
     const loadData = async() => {
         try {
            const data = await fetch(`http://localhost:3000/users`);
@@ -19,7 +32,7 @@ function HomePage() {
           }
         }
         loadData();
-  }, [users]);
+  }, []); 
 
 
   return (
@@ -39,13 +52,13 @@ function HomePage() {
         </thead>
         <tbody>
             {users.map((user, index) => (
-              <tr key={user.id}>
+              <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{user.nama}</td>
                 <td>{user.email}</td>
                 <td className='d-flex gap-2'>
                   <Link to={`/edit/${user.id}`} className='btn btn-primary'>Edit</Link>
-                  <button href="/delete" className='btn btn-danger'>Hapus</button>
+                  <button  onClick={ () => deleteData(user.id)} className='btn btn-danger'>Hapus</button>
                 </td>
               </tr>
             ))}
