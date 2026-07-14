@@ -2,22 +2,27 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 
-
 function HomePage() {
   const [users, setUsers]  = useState([]);
   const [error, setError]  = useState(null);
+  const API = import.meta.env.VITE_API_URL;
 
  
-  const deleteData = async (id) => {
+  const deleteData =  async(id) => {
     try {
-      await fetch(`http://localhost:3000/users/${id}`, {
-        method: "DELETE",
+      const response = await fetch(`${API}/${id}`, {
+        method  : "DELETE",
+        headers : {
+          "content-type" : "aplication/json"
+        },
+        body    : JSON.stringify({id : id})
       });
-      // Optimistically update UI
-      setUsers(prev => prev.filter(user => user.id !== id));
+
+      return await response.json();
     } catch (error) {
       console.error("Gagal Hapus Data !");
     }
+
   }
 
    useEffect(() => {
@@ -32,7 +37,7 @@ function HomePage() {
           }
         }
         loadData();
-  }, []); 
+  }, [users]); 
 
 
   return (

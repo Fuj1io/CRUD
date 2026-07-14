@@ -1,4 +1,4 @@
-import React, { useEffect, useEffectEvent, useState } from 'react';
+import React, { useEffect,  useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
  function FormData() {
@@ -10,8 +10,8 @@ import { useLocation, useNavigate, useParams } from 'react-router';
   const navigate = useNavigate();
   const params = useParams();
   const API = `http://localhost:3000/users`;
-  
- const getDataByID = async() => {
+  //--
+  const getDataByID = async() => {
     try {
       const response = await fetch(`${API}/${params.id}`);
       const data = await response.json();
@@ -25,35 +25,33 @@ import { useLocation, useNavigate, useParams } from 'react-router';
   
   function handleClick(e){
     e.preventDefault();
-    
     const userData = {
       nama  : Nama,
       email : Email
     };
-    
-    //POST_METHOD
-    const postData =  async() => {
-      const post = await fetch(API, {
-        method : "POST", 
-        headers : {
-          "content-type" : "aplication/json"
-        },
-        body : JSON.stringify(userData)
-      });
-      
-      if(Nama === "" || Email === ""){
-        alert("Isi Form dengan lengkap !");
-      } else if(Nama && Email){
-        await post.json();
-        alert("Data Berhasil ditambahkan..!");
+
+     if(!Nama || !Email ){
+        alert("Isi Form dengan Lengkap !");
+        return;
+       }else{
+        // IFEE
+        {(async() => {
+          const response = await fetch(API, {
+            method : "POST", 
+            headers : {
+              "content-type" : "application/json"
+            },
+            body : JSON.stringify(userData)
+          });
+
+          await response.json();
+      })()};
+
         setTimeout(() => {
-          navigate('/');
-        }, 800)
-      }else {
-        return alert("gagal ditambahkan !")
-      }
-    } 
-    postData();
+          alert("Data Berhasil ditambahkan !");
+          navigate("/");
+        }, 500)
+       }
   } // belum jadi
 
   // update_date
@@ -86,13 +84,14 @@ import { useLocation, useNavigate, useParams } from 'react-router';
         alert("gagal Tambah Data!!")
       }
     }
-    
+  
     update();
   }
 
   useEffect(() => {
     getDataByID();
   }, [])
+
  
   return (
     <div className='container w-50 border rounded-2 mt-4'>
@@ -105,28 +104,28 @@ import { useLocation, useNavigate, useParams } from 'react-router';
             <label  className="form-label">Nama</label>
             { // tambah_data
               location.pathname === "/tambah" ?
-              <input type="text" className="form-control" required
-                value={Nama} onChange={(e) => setNama(e.target.value)} /> 
+              <input type="mail" className="form-control" required
+                value={Nama} id="nama" onChange={(e) => setNama(e.target.value)} /> 
                 : // edit_data
-                <input type="text" className="form-control" required
-                  value={NamaById} onChange={(e) => setNamaById(e.target.value)} /> 
+                <input type="mail" className="form-control" required
+                  value={NamaById} id="nama" onChange={(e) => setNamaById(e.target.value)} /> 
             }
         </div>
         <div className="mb-3">
             <label className="form-label" >Email</label>
             {
                location.pathname === "/tambah" ?
-               <input type="text" className="form-control" required
-                 value={Email} onChange={(e) => setEmail(e.target.value)} /> 
+               <input type="mail" className="form-control" required
+                 value={Email} id="email" onChange={(e) => setEmail(e.target.value)} /> 
               : // edit_data
-                 <input type="text" className="form-control" required
-                   value={EmailById} onChange={(e) => setEmailById(e.target.value)} /> 
+                 <input type="mail" className="form-control" required
+                   value={EmailById} id="email" onChange={(e) => setEmailById(e.target.value)} /> 
             }
            
         </div>
         {
           location.pathname === "/tambah" ? 
-          <button type='submit' className='btn btn-primary' onClick={handleClick}>Tambah Data</button> 
+          <button type='submit' className='btn btn-primary' onClick={ handleClick }>Tambah Data</button> 
           :
           <div className='d-flex gap-2'>
             <button type='submit' className='btn btn-primary' onClick={ updateData} >Update Data</button> 
@@ -137,6 +136,6 @@ import { useLocation, useNavigate, useParams } from 'react-router';
     </form>
     </div>
   )
-}
-
+  }
+ 
 export default FormData;

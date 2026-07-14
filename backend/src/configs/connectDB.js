@@ -1,19 +1,20 @@
-import { Sequelize } from "sequelize";
-import { configDotenv } from "dotenv";
+import {Sequelize} from "sequelize";
+import dotenv from "dotenv";
+import { clean } from "../helper/DB.js"
+dotenv.config();
 
-configDotenv();
 
 
 const db = new Sequelize(
-    process.env.DB_NAME,
+    clean(process.env.DB_NAME) ,
     process.env.DB_USERNAME,
     process.env.DB_PASSWORD,
     {
+        host :  process.env.DB_HOSTNAME || "localhost",
         dialect : "mysql",
-        host : process.env.DB_HOSTNAME,
-        port : process.env.DB_PORT,
-        logging : false,
-        freezeTableName : true
+        port :  parseInt(process.env.DB_PORT),
+        logging: false
     }
 );
+
 export default db;

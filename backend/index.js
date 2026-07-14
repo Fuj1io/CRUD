@@ -1,31 +1,34 @@
 import express from "express";
+import dotenv from "dotenv";
 import cors from "cors";
-import { configDotenv } from "dotenv";
-
+import { Sequelize } from "sequelize";
 import db from "./src/configs/connectDB.js";
 
-configDotenv();
-
+// middleware-start
 const app = express();
-
-// MIDLLEWARE_START
-app.use(express());
+dotenv.config();
 app.use(cors());
-// MIDLLEWARE_END
-(async() => {
+// middleware-end
+
+// db_connnect_start
+
+
+async function main() {
     try {
         await db.authenticate();
-        console.log("db COnnected !!");
+        console.log("Connection has been established successfully.");
     } catch (error) {
-        console.log('Failed to Connect', error)
+        console.error("Unable to connect to the database:", error);
     }
-})();
-// ROUTER_START
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
-// ROUTER_END
+}
+
+main();
+// db_connnect_end
+
+// routes_start
+
+// routes_end
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server Running On : http://localhost:3001`);
-});
+    console.log(`Server Running On : ${process.env.PORT}`);
+})
