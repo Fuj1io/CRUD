@@ -1,20 +1,21 @@
-import {Sequelize} from "sequelize";
+import { Sequelize } from "sequelize";
+import clear from "../helper/helperDB.js";
 import dotenv from "dotenv";
-import { clean } from "../helper/DB.js"
+
+// middleware_start
 dotenv.config();
+// middleware_end
 
-
-
-const db = new Sequelize(
-    clean(process.env.DB_NAME) ,
+const connectDB = new Sequelize(
+    clear(process.env.DB_NAME),
     process.env.DB_USERNAME,
     process.env.DB_PASSWORD,
     {
-        host :  process.env.DB_HOSTNAME || "localhost",
+        host    : process.env.DB_HOSTNAME,
         dialect : "mysql",
-        port :  parseInt(process.env.DB_PORT),
-        logging: false
+        port    : process.env.DB_PORT,
+        logging : false
     }
 );
 
-export default db;
+export default connectDB;

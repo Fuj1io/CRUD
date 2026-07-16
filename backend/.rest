@@ -1,0 +1,15 @@
+GET http://localhost:3001/users/search?s=WKw
+###
+GET http://localhost:3001/users
+
+### get By Pk
+GET http://localhost:3001/users/39c9f4b88bb94fb68fcff3fb18333954
+
+###
+POST http://localhost:3001/users
+Content-Type: application/json
+
+{
+    "nama" : "wkwkwk",
+    "email": "wkwk@Mail.com"
+}
