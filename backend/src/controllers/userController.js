@@ -1,4 +1,4 @@
-import { where, Op } from "sequelize";
+import {  Op } from "sequelize";
 import User from "../models/User.js";
 
 export const getData = async(req, res) => {
@@ -30,27 +30,34 @@ export const getById = async(req, res) => {
     }
 };
 export const getByWord= async(req, res) => {
-   const { s } = req.query;
+    try {
+        const { s } = req.query;
     
-   const response = await User.findAll({
-    where : {
-        nama : {
-            [Op.like] : `%${s}%`
+        const response = await User.findAll({
+            where : {
+                nama : {
+                    [Op.like] : `%${s}%`
+                }
+            }
+        }, {limit : 10, offset : 0});
+
+        // Validasi
+        if(response.length === 0){
+            return   res.status(404).json("Data tidak ditemukan !!")
+        }else {
+                return res.status(200).json({
+                data    : response,
+                message : "Data Founded!",
+                success : true
+            }); 
         }
+// ============================
+    } catch (error) {
+        return res.status(404).json({
+            message : error
+        })
     }
-   }, {limit : 10, offset : 0});
-
-//    if(s !== response){
-//     return res.status(400).json({
-//         message : "Data Not Found  !"
-//     });
-//    }
-
-    return res.status(200).json({
-        data    : response,
-        message : "Data Founded!",
-        success : true
-    }); 
+  
 };
 export const addData = async(req, res) => {
     try {

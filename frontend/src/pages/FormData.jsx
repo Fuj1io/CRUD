@@ -9,50 +9,54 @@ import { useLocation, useNavigate, useParams } from 'react-router';
   const location = useLocation();
   const navigate = useNavigate();
   const params = useParams();
-  const API = `http://localhost:3000/users`;
+  const API = import.meta.env.VITE_API_URL;
+  
   //--
   const getDataByID = async() => {
     try {
       const response = await fetch(`${API}/${params.id}`);
       const data = await response.json();
+      const dataUser = data.data;
 
-      setNamaById(data.nama);
-      setEmailById(data.email);
+      setNamaById(dataUser.nama);
+      setEmailById(dataUser.email);
     } catch (error) {
       console.log(error);
     }
   }
   
-  function handleClick(e){
+  const handleClick = async(e) => {
     e.preventDefault();
-    const userData = {
-      nama  : Nama,
-      email : Email
-    };
 
-     if(!Nama || !Email ){
-        alert("Isi Form dengan Lengkap !");
+    try {
+      const userData = {
+        nama  : Nama,
+        email : Email
+      }
+
+      if(!Nama || !Email ){ 
+        alert("Isi data Dengan lengkap !"); 
         return;
-       }else{
-        // IFEE
-        {(async() => {
-          const response = await fetch(API, {
-            method : "POST", 
-            headers : {
-              "content-type" : "application/json"
-            },
-            body : JSON.stringify(userData)
-          });
+      }
 
-          await response.json();
-      })()};
+      const response = await fetch(API, {
+        method  : "POST",
+        headers : {"Content-Type":"application/json"},
+        body    : JSON.stringify(userData)
+      });
 
+      if(response) { 
+        await response.json();
+        alert("berhasil disimpan !");
         setTimeout(() => {
-          alert("Data Berhasil ditambahkan !");
           navigate("/");
-        }, 500)
-       }
-  } // belum jadi
+        }, 500);
+      } 
+    
+    } catch (error) {
+      alert("gagal !")
+      };
+  } 
 
   // update_date
   function updateData(event){
@@ -66,9 +70,9 @@ import { useLocation, useNavigate, useParams } from 'react-router';
     const update = async() => {
       try {
         const response = await fetch(`${API}/${params.id}`, {
-            method : "PUT",
+            method : "PATCH",
             headers : {
-              "content-type" : "aplication/json"
+              "Content-Type" : "application/json"
             },
             body : JSON.stringify(data)
           });
@@ -92,7 +96,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
     getDataByID();
   }, [])
 
- 
+
   return (
     <div className='container w-50 border rounded-2 mt-4'>
 {
@@ -104,7 +108,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
             <label  className="form-label">Nama</label>
             { // tambah_data
               location.pathname === "/tambah" ?
-              <input type="mail" className="form-control" required
+              <input type="mail" className="form-control" placeholder="masukkan Nama Anda" required
                 value={Nama} id="nama" onChange={(e) => setNama(e.target.value)} /> 
                 : // edit_data
                 <input type="mail" className="form-control" required
@@ -115,10 +119,10 @@ import { useLocation, useNavigate, useParams } from 'react-router';
             <label className="form-label" >Email</label>
             {
                location.pathname === "/tambah" ?
-               <input type="mail" className="form-control" required
+               <input type="mail" className="form-control" placeholder="masukkan Email Anda" required
                  value={Email} id="email" onChange={(e) => setEmail(e.target.value)} /> 
               : // edit_data
-                 <input type="mail" className="form-control" required
+                 <input type="mail" className="form-control" placeholder="masukkan Email Anda" required
                    value={EmailById} id="email" onChange={(e) => setEmailById(e.target.value)} /> 
             }
            
