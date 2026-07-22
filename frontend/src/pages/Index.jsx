@@ -1,15 +1,37 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { useState, useEffect, useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router';
 
 function HomePage() {
   const [users, setUsers]  = useState([]);
   const [error, setError]  = useState(null);
-  const API = import.meta.env.VITE_API_URL;
-  
-  // 
+  const [searchParams] =  useSearchParams();
 
- 
+  const API = import.meta.env.VITE_API_URL;
+  // membaca query
+  const searchQuery = searchParams.get('s') || '';
+  
+  const loadData = useCallback(async () => {
+    try {
+      let url = API;
+      // Jika ada kata kunci pencarian, arahkan ke endpoint pencarian backend
+      if (searchQuery) {
+        url = `${API}/search?s=${searchQuery}`;
+      }
+      const response = await fetch(url);
+      const resData = await response.json();
+      
+      if (response.ok) {
+        setUsers(resData.data || []);
+      } else {
+        setUsers([]); // Reset data jika pencarian tidak ditemukan (404)
+      }
+    } catch (error) {
+      setError(error.message);
+      console.error('error', error);
+    }
+  }, [API, searchQuery]);
+
   const deleteData =  async(id) => {
     try {
       const response = await fetch(`${API}/${id}`, {
@@ -20,6 +42,7 @@ function HomePage() {
         body    : JSON.stringify({id : id})
       });
 
+      loadData();
       return await response.json();
     } catch (error) {
       console.error("Gagal Hapus Data !");
@@ -27,19 +50,8 @@ function HomePage() {
   }
 
    useEffect(() => {
-    const loadData = async() => {
-        try {
-           const data = await fetch(API);
-           const userData = await data.json();
-
-           setUsers(userData.data || []);
-          } catch (error) {
-            setError(error.message)
-            console.error('error')
-          }
-        }
         loadData();
-  }, [users]); 
+  }, [loadData]); 
 
 
     return (
