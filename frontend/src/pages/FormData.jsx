@@ -45,16 +45,18 @@ import { useLocation, useNavigate, useParams } from 'react-router';
         body    : JSON.stringify(userData)
       });
 
-      if(response) { 
-        await response.json();
+      if(!response.ok) { 
+        throw new Error("Gagal Tambah Data !!");
+      } else {
         alert("berhasil disimpan !");
         setTimeout(() => {
           navigate("/");
         }, 500);
-      } 
+        return await response.json();
+      }
     
     } catch (error) {
-      alert("gagal !")
+      alert(error)
       };
   } 
 
@@ -67,7 +69,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
       email : EmailById
     }
 
-    const update = async() => {
+    const updated = async() => {
       try {
         const response = await fetch(`${API}/${params.id}`, {
             method : "PATCH",
@@ -89,12 +91,12 @@ import { useLocation, useNavigate, useParams } from 'react-router';
       }
     }
   
-    update();
+    updated();
   }
 
   useEffect(() => {
     getDataByID();
-  }, [])
+  }, [getDataByID])
 
 
   return (
@@ -108,11 +110,11 @@ import { useLocation, useNavigate, useParams } from 'react-router';
             <label  className="form-label">Nama</label>
             { // tambah_data
               location.pathname === "/tambah" ?
-              <input type="mail" className="form-control" placeholder="masukkan Nama Anda" required
+              <input type="text" className="form-control" placeholder="masukkan Nama Anda" required
                 value={Nama} id="nama" onChange={(e) => setNama(e.target.value)} /> 
                 : // edit_data
-                <input type="mail" className="form-control" required
-                  value={NamaById} id="nama" onChange={(e) => setNamaById(e.target.value)} /> 
+                <input type="text" className="form-control" required
+                  value={NamaById} id="namaById" onChange={(e) => setNamaById(e.target.value)} /> 
             }
         </div>
         <div className="mb-3">
@@ -123,7 +125,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
                  value={Email} id="email" onChange={(e) => setEmail(e.target.value)} /> 
               : // edit_data
                  <input type="mail" className="form-control" placeholder="masukkan Email Anda" required
-                   value={EmailById} id="email" onChange={(e) => setEmailById(e.target.value)} /> 
+                   value={EmailById} id="emailById" onChange={(e) => setEmailById(e.target.value)} /> 
             }
            
         </div>
@@ -138,6 +140,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 
         }
     </form>
+   
     </div>
   )
   }

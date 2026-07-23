@@ -1,6 +1,6 @@
 import express from "express";
-
-const router = express.Router();
+import { userSchema} from "../middlewares/joiSchema/userSchema.js";
+import {validate} from "../middlewares/validate.js";
 import {
     getData,
     getById,
@@ -9,12 +9,13 @@ import {
     deleteData,
     getByWord
 } from "../controllers/userController.js";
+const router = express.Router();
 
 router.get("/", getData);
-router.post("/", addData);
+router.post("/", validate(userSchema), addData);
 router.get("/search", getByWord);
 router.get("/:id", getById);
-router.patch("/:id", updateData);
+router.patch("/:id", validate(userSchema), updateData);
 router.delete("/:id", deleteData);
 
 export default router;

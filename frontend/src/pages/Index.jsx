@@ -1,57 +1,69 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 
 function HomePage() {
-  const [users, setUsers]  = useState([]);
-  const [error, setError]  = useState(null);
-  const [searchParams] =  useSearchParams();
+ const [users, setUsers] = useState([]);
+ const [err, setErr]     = useState(null);
+ const [searchParams] = useSearchParams();
 
   const API = import.meta.env.VITE_API_URL;
-  // membaca query
   const searchQuery = searchParams.get('s') || '';
+  const navigate = useNavigate();
+
   
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async() => {
     try {
       let url = API;
-      // Jika ada kata kunci pencarian, arahkan ke endpoint pencarian backend
-      if (searchQuery) {
+
+      if(searchQuery){
         url = `${API}/search?s=${searchQuery}`;
       }
-      const response = await fetch(url);
-      const resData = await response.json();
-      
-      if (response.ok) {
-        setUsers(resData.data || []);
-      } else {
-        setUsers([]); // Reset data jika pencarian tidak ditemukan (404)
+
+      const response  = await fetch(url);
+      const result    = await response.json();
+      const data      = result.data;
+
+      if(!response.ok){
+        setUsers([]);
+        // setErr(result.message);
+        console.log(result.message);
+      }else {
+        setUsers(data || [])
       }
+
     } catch (error) {
-      setError(error.message);
-      console.error('error', error);
+      return error;
     }
   }, [API, searchQuery]);
+  
 
-  const deleteData =  async(id) => {
+  const deleteData = async(id) => {
     try {
-      const response = await fetch(`${API}/${id}`, {
-        method  : "DELETE",
-        headers : {
+      const response = await fetch(`${API}/${id}`,{
+        method : "DELETE",
+        body   : JSON.stringify({ id: id }),
+        headers: {
           "Content-Type" : "application/json"
-        },
-        body    : JSON.stringify({id : id})
+        }
       });
+      const result = await response.json();
 
-      loadData();
-      return await response.json();
+      if(!response.ok){
+        throw new Error(result.message);
+      }
+      
+      loadData()
+      return result;
     } catch (error) {
-      console.error("Gagal Hapus Data !");
+      setErr(error.message)
     }
   }
 
-   useEffect(() => {
-        loadData();
-  }, [loadData]); 
+ useEffect(() => {
+  loadData();
+ }, [ loadData])
+
 
 
     return (
@@ -83,6 +95,7 @@ function HomePage() {
               ))}
           </tbody>
         </table>
+              {searchQuery && <button className='btn btn-primary mt-2 position-fixed' onClick={() => navigate(-1)}>Back</button>}
       </div>
     )
   }
